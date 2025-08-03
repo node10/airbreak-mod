@@ -20,7 +20,7 @@ patch() {
 	dd bs=1 seek=$offset conv=notrunc of="$OUT" status=none
 }
 
-echo "533b91127aa22e05b933db203ad56c449dc12a8c3fd62f57bd88c472a8061775  $IN"\
+echo "e32aa2af3defbda37d29d10651f624e65ed564bd67146c1d854e992bbec7dff4  $IN"\
 | sha256sum --check \
 || die "$IN: wrong hash"
 
@@ -41,12 +41,12 @@ patch_code() {
 	#if you want to add the extra breath mode
 	BUILD_FLAGS=$(( BUILD_FLAGS | (1 << 0) ))
 
-	if [ -r breath.bin ] ; then
-		echo "Including breath.bin"
-		cat breath.bin | patch 0xbb734 || die "binary patch failed"
-	else
-		die "breath.bin not found, did you run make?"
-	fi 
+	#if [ -r breath.bin ] ; then
+	#	echo "Including breath.bin"
+	#	cat breath.bin | patch 0xbb734 || die "binary patch failed"
+	#else
+	#	die "breath.bin not found, did you run make?"
+	#fi 
 
 	if [ -r graph.bin ]; then
 		echo "Including graph.bin"
@@ -116,12 +116,12 @@ gui_config () {
 }
 
 patch_code
-unlock_ui_limits
-extra_debug
-extra_modes
-extra_menu
+#unlock_ui_limits
+#extra_debug
+#extra_modes
+#extra_menu
 #all_menu
-gui_config
+#gui_config
 
 FLAGSTR=$(printf 'FLAGS=0x%02x' $BUILD_FLAGS)
 printf $FLAGSTR | patch 0x17588

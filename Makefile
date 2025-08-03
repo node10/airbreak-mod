@@ -1,6 +1,6 @@
 all: stm32-unlocked.bin
 
-stm32-unlocked.bin: breath.bin graph.bin
+stm32-unlocked.bin: graph.bin
 	./patch-airsense ../cpap/stm32.bin $@
 
 serve:
@@ -17,8 +17,8 @@ deploy:
 # To add another extension at a different address in the firmware,
 # define a .elf target and a variable with the offset that it will
 # be patched into the image.
-breath.elf: breath.o stubs.o
-breath-offset := 0x80bb734
+#breath.elf: breath.o stubs.o
+#breath-offset := 0x80bb734
 
 #
 # The graphing is too large to fit directly in the location at 0x8067d2c,
@@ -29,8 +29,8 @@ graph-offset := 0x80fd000
 # If there is a new version of the ghidra XML, the stubs.S
 # file will be regenerated so that the addresses and functions
 # are at the correct address in the ELF image.
-stubs.S: stm32.bin.xml
-	./ghidra2stubs < $< > $@
+#stubs.S: stm32.bin.xml
+#	./ghidra2stubs < $< > $@
 
 
 CROSS ?= arm-none-eabi-
