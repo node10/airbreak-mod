@@ -5,3 +5,4 @@ stm32/
 *.elf
 *.bin
 .*.swp
+.vscode/settings.json
