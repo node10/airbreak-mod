@@ -76,11 +76,13 @@ int start(void)
 	//LCD_DrawPixel(state->sample, center - (2 * 30 - height/2));
 
 	//check each byte individually to 'bpm' ascii values, draw a giant red square on match
-	//this works, but the red portion is only changed as the graph slowly draws over it while drawing the pressure line
+	//breath.c sets and unsets a magic value for tracking purposes over time and many function calls, trying that
+	//to only draw a red square indicating a match once and not again on subsequent 'bpm' writes to memory
 	char * const memToCheck = (void*) 0x2000d5b0;
-	if (memToCheck[0] == 'b' && memToCheck[1] == 'p' && memToCheck[2] == 'm') {
+	if (state->magic != 0xDECAFBAD && memToCheck[0] == 'b' && memToCheck[1] == 'p' && memToCheck[2] == 'm') {
 		GUI_SetColor(0x0000FF);
 		GUI_FillRect(0, 130, 200, 160);
+		state->magic = 0xDECAFBAD;
 	}
 
 	// draw the current commanded pressure faintly
