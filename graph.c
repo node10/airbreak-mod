@@ -57,7 +57,7 @@ int start(void)
 	// actual pressure 0 - 32, scaled to -30 to 30
 	int value = 2 * fvars[2] - height/2;
 	int command = 2 * fvars[0x2d] - height/2;
-	int * const intascolor   = (int*) 0x2000d5b0;
+	//int * const intascolor   = (int*) 0x2000d5b0;
 
 	if (value < -height/2)
 		value = -height/2;
@@ -65,21 +65,35 @@ int start(void)
 	if (value > +height/2)
 		value = +height/2;
 
-	GUI_SetColor(*intascolor);
+	GUI_SetColor(0x0);
 	LCD_FillRect(state->sample, center - height/2, state->sample + 8, center + height/2);
 	// bgr?
 
 	// draw 5, 10, 15, 20 very faintly
-	GUI_SetColor(0x202020);
-	LCD_DrawPixel(state->sample, center - (2 * 10 - height/2));
-	LCD_DrawPixel(state->sample, center - (2 * 20 - height/2));
-	LCD_DrawPixel(state->sample, center - (2 * 30 - height/2));
+	//GUI_SetColor(0x202020);
+	//LCD_DrawPixel(state->sample, center - (2 * 10 - height/2));
+	//LCD_DrawPixel(state->sample, center - (2 * 20 - height/2));
+	//LCD_DrawPixel(state->sample, center - (2 * 30 - height/2));
+
+	//assign bytes at 0x2000d5b0 to ascii characters, including null
+	char * const memToCheck = (void*) 0x2000d5b0;
+	char capturedChars[4];
+	capturedChars[0] = memToCheck[0];
+	capturedChars[1] = memToCheck[1];
+	capturedChars[2] = memToCheck[2];
+	capturedChars[3] = '\0';
+
+	//compare to character bytes to 'bpm', show text on display indicating a match
+	//amusingly, GUI_DispStringAt() crashes the machine, which actually indicates a match :)
+	if (strcmp(capturedChars, "bpm") == 0) {
+  		GUI_DispStringAt("MATCH", 10, 130);
+	}
 
 	// draw the current commanded pressure faintly
 	GUI_SetColor(0x0000F0);
 	LCD_DrawPixel(state->sample, center - command);
 
-	// draw thje strip chart in bright green
+	// draw the strip chart in bright green
 	GUI_SetColor(0x00FF00);
 
 	if (state->last_value < value)
