@@ -75,18 +75,12 @@ int start(void)
 	//LCD_DrawPixel(state->sample, center - (2 * 20 - height/2));
 	//LCD_DrawPixel(state->sample, center - (2 * 30 - height/2));
 
-	//assign bytes at 0x2000d5b0 to ascii characters, including null
+	//check each byte individually to 'bpm' ascii values, draw a giant red square on match
+	//this works, but the red portion is only changed as the graph slowly draws over it while drawing the pressure line
 	char * const memToCheck = (void*) 0x2000d5b0;
-	char capturedChars[4];
-	capturedChars[0] = memToCheck[0];
-	capturedChars[1] = memToCheck[1];
-	capturedChars[2] = memToCheck[2];
-	capturedChars[3] = '\0';
-
-	//compare to character bytes to 'bpm', show text on display indicating a match
-	//amusingly, GUI_DispStringAt() crashes the machine, which actually indicates a match :)
-	if (strcmp(capturedChars, "bpm") == 0) {
-  		GUI_DispStringAt("MATCH", 10, 130);
+	if (memToCheck[0] == 'b' && memToCheck[1] == 'p' && memToCheck[2] == 'm') {
+		GUI_SetColor(0x0000FF);
+		GUI_FillRect(0, 130, 200, 160);
 	}
 
 	// draw the current commanded pressure faintly
