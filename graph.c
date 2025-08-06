@@ -57,6 +57,7 @@ int start(void)
 	// actual pressure 0 - 32, scaled to -30 to 30
 	int value = 2 * fvars[2] - height/2;
 	int command = 2 * fvars[0x2d] - height/2;
+	int * const intascolor   = (int*) 0x2000d5b0;
 
 	if (value < -height/2)
 		value = -height/2;
@@ -64,7 +65,7 @@ int start(void)
 	if (value > +height/2)
 		value = +height/2;
 
-	GUI_SetColor(0x0);
+	GUI_SetColor(*intascolor);
 	LCD_FillRect(state->sample, center - height/2, state->sample + 8, center + height/2);
 	// bgr?
 
