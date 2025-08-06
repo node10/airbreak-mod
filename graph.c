@@ -78,10 +78,10 @@ int start(void)
 	//check each byte individually to 'bpm' ascii values, draw a giant red square on match
 	//breath.c sets and unsets a magic value for tracking purposes over time and many function calls, trying that
 	//to only draw a red square indicating a match once and not again on subsequent 'bpm' writes to memory
-	char * const memToCheck = (void*) 0x2000d5b0;
+	char * const memToCheck = (void*) 0x2000d5d0;
 	if (state->magic != 0xDECAFBAD && memToCheck[0] == 'b' && memToCheck[1] == 'p' && memToCheck[2] == 'm') {
 		GUI_SetColor(0x0000FF);
-		GUI_FillRect(0, 130, 200, 160);
+		LCD_FillRect(0, 130, 200, 160);
 		state->magic = 0xDECAFBAD;
 	}
 
