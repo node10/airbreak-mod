@@ -75,13 +75,14 @@ int start(void)
 	//LCD_DrawPixel(state->sample, center - (2 * 20 - height/2));
 	//LCD_DrawPixel(state->sample, center - (2 * 30 - height/2));
 
-	//check each byte individually to 'bpm' ascii values, change color for next draw to Red if match, blue otherwise
-	//first test run, rectangle is briefly blue, then stays red for 1+ minutes
+	//check each byte individually to ascii values
+	//a different set of bytes to check than before, bytes that also show up occasionally at that address
+	//rectangle starts blue, is very briefly green, then always blue
 	//current theory is: the display in this mode only updates when the commanded pressure changes, so during time slices where 
 	//the pressure doesn't change, the display does not update and thus this code potentially skips setting the correct color
 	char * const memToCheck = (void*) 0x2000d5d0;
-	if (memToCheck[0] == 'b' && memToCheck[1] == 'p' && memToCheck[2] == 'm') {
-		GUI_SetColor(0x0000FF);
+	if (memToCheck[0] == 'L' && memToCheck[1] == '/' && memToCheck[2] == 's') {
+		GUI_SetColor(0x00FF00);
 	} else {
 		GUI_SetColor(0xFF0000);
 	}
