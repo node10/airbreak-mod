@@ -75,15 +75,17 @@ int start(void)
 	//LCD_DrawPixel(state->sample, center - (2 * 20 - height/2));
 	//LCD_DrawPixel(state->sample, center - (2 * 30 - height/2));
 
-	//check each byte individually to 'bpm' ascii values, draw a giant red square on match
-	//breath.c sets and unsets a magic value for tracking purposes over time and many function calls, trying that
-	//to only draw a red square indicating a match once and not again on subsequent 'bpm' writes to memory
+	//check each byte individually to 'bpm' ascii values, change color for next draw to Red if match, blue otherwise
+	//first test run, rectangle is briefly blue, then stays red for 1+ minutes
+	//current theory is: the display in this mode only updates when the commanded pressure changes, so during time slices where 
+	//the pressure doesn't change, the display does not update and thus this code potentially skips setting the correct color
 	char * const memToCheck = (void*) 0x2000d5d0;
-	if (state->magic != 0xDECAFBAD && memToCheck[0] == 'b' && memToCheck[1] == 'p' && memToCheck[2] == 'm') {
+	if (memToCheck[0] == 'b' && memToCheck[1] == 'p' && memToCheck[2] == 'm') {
 		GUI_SetColor(0x0000FF);
-		LCD_FillRect(0, 130, 200, 160);
-		state->magic = 0xDECAFBAD;
+	} else {
+		GUI_SetColor(0xFF0000);
 	}
+	LCD_FillRect(0, 150, 200, 230);
 
 	// draw the current commanded pressure faintly
 	GUI_SetColor(0x0000F0);
